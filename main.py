@@ -1,5 +1,5 @@
 import streamlit as st
-import queries
+from func import queries
 import pandas as pd
 
 
@@ -49,10 +49,18 @@ To see the questions and the queries, click on the arrow on the left.
 
     elif question == "Halt Times":
         st.sidebar.write("### Question 2")
-        halt_times, headers = queries.display_halt_times()
-        halt_times = pd.DataFrame(halt_times)
-        halt_times.columns = [header[0] for header in headers]
-        st.write("Trains with longest halt times:", halt_times)
+        longest_halt_times, shortest_halt_times, headers = queries.display_halt_times()
+
+        longest_halt_times[4] = [str(halt_time) for halt_time in longest_halt_times[4]]
+        longest_halt_times = pd.DataFrame(longest_halt_times)
+        longest_halt_times.columns = [header[0] for header in headers]
+
+        shortest_halt_times[4] = [str(halt_time) for halt_time in shortest_halt_times[4]]
+        shortest_halt_times = pd.DataFrame(shortest_halt_times)
+        shortest_halt_times.columns = [header[0] for header in headers]
+
+        st.write("Trains with longest halt times:", longest_halt_times)
+        st.write("Trains with shortest halt times:", shortest_halt_times)
 
     elif question == "Find Trains between Stations":
         st.sidebar.write("### Question 3")
