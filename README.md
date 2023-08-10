@@ -2,6 +2,9 @@
 Hello I am Pratham Bhat from PES University and this is my submission for the Swym Build Challenge.
 I have picked the Railway Timetable Assignment.
 
+## Demo Video
+https://youtu.be/PBvzhiaUin4
+
 ## Problem Statement
 Our CSV puts midnight (00:00:00) as arrival time at all origin stations and also departure
 time from destination stations. How will you handle this ?
