@@ -7,7 +7,20 @@ import pandas as pd
 def main():
     st.title("Indian Railways Timetable")
 
-    message = '''
+    # Sidebar options
+    question = st.sidebar.selectbox("Select a Question",
+                                    [
+                                        "",
+                                        "Find Trains Arriving at Midnight",
+                                        "Halt Times",
+                                        "Find Trains between Stations",
+                                        "Query Sandbox"
+                                    ]
+                                    )
+
+    if question == "":
+        st.sidebar.write("### Select a Question from the Sidebar")
+        message = '''
 This app is a demo of the Indian Railways Timetable database.
 The database is hosted on a MySQL server and is queried using Python.
 The database contains the following tables:
@@ -21,28 +34,22 @@ The following questions can be answered using the database:
 
 A query sandbox is also provided to run custom queries on the database.
 
-The source code for this app can be found [here]().
+The source code for this app can be found [here](https://github.com/PrathamBhatTech/SwymAssignment-PrathamBhat).
 To see the questions and the queries, click on the arrow on the left.
     '''
+        st.write(message)
 
-    st.write(message)
-
-    # Sidebar options
-    question = st.sidebar.selectbox("Select a Question",
-                                    [
-                                        "",
-                                        "Find Trains Arriving at Midnight",
-                                        "Find Trains between Stations",
-                                        "Query Sandbox"
-                                    ]
-                                    )
-
-    if question == "Find Trains Arriving at Midnight":
+    elif question == "Find Trains Arriving at Midnight":
         st.sidebar.write("### Question 1")
         station_code = st.text_input("Enter Station Code", "SWV")
         if st.button("Find Trains"):
             midnight_arrivals = queries.find_midnight_arrivals(station_code)
             st.write("Trains arriving at midnight:", midnight_arrivals)
+
+    elif question == "Halt Times":
+        st.sidebar.write("### Question 2")
+        halt_times = queries.display_halt_times()
+        st.write("Trains with longest halt times:", halt_times)
 
     elif question == "Find Trains between Stations":
         st.sidebar.write("### Question 3")

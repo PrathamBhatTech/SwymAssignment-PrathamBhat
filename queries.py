@@ -1,6 +1,4 @@
-import streamlit as st
 import mysql.connector
-from datetime import datetime, timedelta
 
 # Connect to the MySQL database
 try:
@@ -32,6 +30,14 @@ def find_midnight_arrivals(station_code):
     cursor.execute(query, (station_code,))
     midnight_arrivals = cursor.fetchall()
     return midnight_arrivals
+
+
+# Function to calculate halt times for trains
+def display_halt_times():
+    # What are the maximum, minimum and average halts for trains ? Is it enough to just
+    # subtract the departure time from arrival time to get the halt time ? What about trains that
+    # arrive just before midnight and leave some time after midnight ?
+
 
 # Example usage
 # midnight_arrivals = find_midnight_arrivals('SWV')
