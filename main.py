@@ -10,7 +10,7 @@ def main():
     # Sidebar options
     question = st.sidebar.selectbox("Select a Question",
                                     [
-                                        "",
+                                        "Select a Question from the Sidebar",
                                         "Find Trains Arriving at Midnight",
                                         "Halt Times",
                                         "Find Trains between Stations",
@@ -18,8 +18,7 @@ def main():
                                     ]
                                     )
 
-    if question == "":
-        st.sidebar.write("### Select a Question from the Sidebar")
+    if question == "Select a Question from the Sidebar":
         message = '''
 This app is a demo of the Indian Railways Timetable database.
 The database is hosted on a MySQL server and is queried using Python.
@@ -44,11 +43,15 @@ To see the questions and the queries, click on the arrow on the left.
         station_code = st.text_input("Enter Station Code", "SWV")
         if st.button("Find Trains"):
             midnight_arrivals = queries.find_midnight_arrivals(station_code)
+            midnight_arrivals = pd.DataFrame(midnight_arrivals)
+            midnight_arrivals.columns = ["Train Number", "Train Name"]
             st.write("Trains arriving at midnight:", midnight_arrivals)
 
     elif question == "Halt Times":
         st.sidebar.write("### Question 2")
-        halt_times = queries.display_halt_times()
+        halt_times, headers = queries.display_halt_times()
+        halt_times = pd.DataFrame(halt_times)
+        halt_times.columns = [header[0] for header in headers]
         st.write("Trains with longest halt times:", halt_times)
 
     elif question == "Find Trains between Stations":
@@ -57,6 +60,8 @@ To see the questions and the queries, click on the arrow on the left.
         end_station = st.text_input("Enter End Station Code", "ASR")
         if st.button("Find Trains"):
             trains_between_stations = queries.find_trains_between_stations(start_station, end_station)
+            trains_between_stations = pd.DataFrame(trains_between_stations)
+            trains_between_stations.columns = ["Train Number", "Train Name"]
             st.write("Trains between stations:", trains_between_stations)
 
     elif question == "Query Sandbox":
@@ -73,8 +78,6 @@ To see the questions and the queries, click on the arrow on the left.
             df.columns = [header[0] for header in headers]
 
             st.write("Result as DataFrame:", df)
-
-            st.write("Result:", result)
 
 
 if __name__ == "__main__":

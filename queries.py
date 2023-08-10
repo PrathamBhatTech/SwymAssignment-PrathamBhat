@@ -23,9 +23,10 @@ def execute_query(query):
 
 def find_midnight_arrivals(station_code):
     query = '''
-    SELECT TrainNo, TrainName
-    FROM TrainStops
-    WHERE StationCode = %s AND ArrivalTime = '00:00:00'
+    SELECT ts.TrainNo, t.TrainName
+    FROM TrainStops ts
+    JOIN Trains t ON ts.TrainNo = t.TrainNo
+    WHERE ts.StationCode = %s AND ts.ArrivalTime = '00:00:00';
     '''
     cursor.execute(query, (station_code,))
     midnight_arrivals = cursor.fetchall()
@@ -34,11 +35,28 @@ def find_midnight_arrivals(station_code):
 
 # Function to calculate halt times for trains
 def display_halt_times():
-    # What are the maximum, minimum and average halts for trains ? Is it enough to just
-    # subtract the departure time from arrival time to get the halt time ? What about trains that
-    # arrive just before midnight and leave some time after midnight ?
+    # Query to find halt times for trains
+    query = '''
+    SELECT ts.TrainNo, t.TrainName, ts.ArrivalTime, ts.DepartureTime,
+    TIMEDIFF(ts.DepartureTime, ts.ArrivalTime) AS HaltTime
+    FROM TrainStops ts
+    JOIN Trains t ON ts.TrainNo = t.TrainNo
+    ORDER BY HaltTime DESC;
+    '''
+    cursor.execute(query)
+    halt_times = cursor.fetchall()
+    return halt_times, cursor.description
 
 
-# Example usage
-# midnight_arrivals = find_midnight_arrivals('SWV')
-# print("Trains arriving at midnight:", midnight_arrivals)
+def find_trains_between_stations(start_station, end_station):
+    # Query to find trains between stations
+    query = '''
+    SELECT DISTINCT ts.TrainNo, t.TrainName
+    FROM TrainStops ts
+    JOIN Trains t ON ts.TrainNo = t.TrainNo
+    WHERE ts.StationCode = %s OR ts.StationCode = %s;
+    '''
+    cursor.execute(query, (start_station, end_station))
+    trains_between_stations = cursor.fetchall()
+    return trains_between_stations
+
